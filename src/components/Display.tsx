@@ -6,34 +6,46 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import data from "../api/data.json";
+import { dateSorterDescending } from "@/utils/dateSorter";
+import { isTodayPresent } from "@/utils/isTodayPresent";
 
 export function Display() {
+  const itemToDisplay = dateSorterDescending(data);
+  console.log(isTodayPresent(data));
   return (
     <>
-      <div className="my-8 w-full h-96 bg-white p-8 border-slate-200 border-2 rounded-lg shadow-xl">
+      <div className="w-full bg-white p-8 border-slate-200 border-2 rounded-lg shadow-xl">
         <span className="font-bold text-lg m-4">Your expenses and incomes</span>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="">Date</TableHead>
-              <TableHead>Expense</TableHead>
               <TableHead>Income</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
+              <TableHead>Expense</TableHead>
+              <TableHead className="text-right">Net Amount</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow>
-              <TableCell className="font-medium">May 1</TableCell>
-              <TableCell>100</TableCell>
-              <TableCell>200</TableCell>
-              <TableCell className="text-right">$250.00</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">May 2</TableCell>
-              <TableCell>101</TableCell>
-              <TableCell>200</TableCell>
-              <TableCell className="text-right">$250.00</TableCell>
-            </TableRow>
+            {itemToDisplay.map((item) => (
+              <TableRow key={item.id}>
+                <TableCell className="font-medium">{item.date}</TableCell>
+                <TableCell>${item.income}</TableCell>
+                <TableCell>${item.expense}</TableCell>
+                <TableCell
+                  className={`font-semibold text-right ${
+                    item.income - item.expense > 0
+                      ? "text-green-600"
+                      : "text-red-600"
+                  }`}
+                >
+                  $
+                  {item.income - item.expense < 0
+                    ? item.expense - item.income
+                    : item.income - item.expense}
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>
