@@ -1,8 +1,38 @@
+import { useState } from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Input } from "./ui/input";
-
+import axios from "axios";
+import { z } from "zod";
 export function AddExpInc() {
+  const [title, setTitle] = useState("");
+  const [incExp, setIncExp] = useState<number>(0);
+  const [date, setDate] = useState("");
+  const submitSchema = z.object({
+    id: z.number(),
+    title: z.string().min(1),
+    expense: z.number(),
+    income: z.number(),
+    date: z.string().min(1),
+  });
+  const handleSubmit = () => {
+    const submitData = {
+      id: 10,
+      title: title,
+      expense: incExp < 0 ? incExp : 0,
+      income: incExp > 0 ? incExp : 0,
+      date: date,
+    };
+    if (submitSchema.safeParse(submitData).success) {
+      axios.post("../api/dbData.json", submitData);
+    }
+    // if (!title || !date || incExp === null) {
+    //   return;
+    // } else {
+    //
+    // }
+  };
+
   return (
     <>
       <Card className="shadow-md content-center md:w-96 lg:w-96">
@@ -18,7 +48,8 @@ export function AddExpInc() {
               type="text"
               id="title"
               className="mt-1"
-              onChange={(e) => console.log(e.target.value)}
+              onChange={(e) => setTitle(e.target.value)}
+              value={title}
             />
           </label>
           <label htmlFor="expInc">
@@ -27,8 +58,10 @@ export function AddExpInc() {
               type="number"
               id="expInc"
               className="mt-1"
-              onChange={(e) => console.log(e.target.value)}
+              onChange={(e) => setIncExp(Number(e.target.value))}
+              value={incExp}
             />
+
             <span className="text-xs text-red-600">
               Note: -ve for expense & +ve for income
             </span>
@@ -39,10 +72,13 @@ export function AddExpInc() {
               type="date"
               id="date"
               className="mt-1"
-              onChange={(e) => console.log(e.target.value)}
+              onChange={(e) => setDate(e.target.value)}
+              value={date}
             />
           </label>
-          <Button className="font-lg font-semibold">Add</Button>
+          <Button className="font-lg font-semibold" onClick={handleSubmit}>
+            Add
+          </Button>
         </CardContent>
       </Card>
     </>
