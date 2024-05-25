@@ -1,32 +1,47 @@
-import { Button } from "./ui/button";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuList,
-} from "./ui/navigation-menu";
+import { Menu } from "lucide-react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export function Navbar() {
+  const [state, setState] = useState(false);
+
+  const menus = [
+    { title: "Dashboard", path: "/" },
+    { title: "Login", path: "/login" },
+    { title: "Signup", path: "/signup" },
+  ];
   return (
-    <>
-      <div className="bg-slate-900 w-full p-6 sticky mb-5 top-0 align-middle z-10">
-        <NavigationMenu>
-          <NavigationMenuList className="flex justify-between	">
-            <NavigationMenuItem className="text-white font-bold ">
-              Expense Tracker
-            </NavigationMenuItem>
-            <NavigationMenuItem className="text-white font-bold ">
-              <Button className="bg-white text-black hover:bg-slate-100">
-                Signup
-              </Button>
-            </NavigationMenuItem>
-            <NavigationMenuItem className="text-white font-bold ">
-              <Button className="bg-white text-black hover:bg-slate-100">
-                Login
-              </Button>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+    <nav className="bg-white w-full border-b md:border-0 shadow-md mb-8">
+      <div className="items-center px-4 max-w-screen-xl mx-auto md:flex md:px-8">
+        <div className="flex items-center justify-between py-3 md:py-5 md:block">
+          <Link to="/">
+            <h1 className="text-2xl font-bold text-slate-900">
+              Earning Tracker
+            </h1>
+          </Link>
+          <div className="md:hidden">
+            <button
+              className="text-gray-900 outline-none p-2 rounded-md focus:border-gray-600 focus:border"
+              onClick={() => setState(!state)}
+            >
+              <Menu />
+            </button>
+          </div>
+        </div>
+        <div
+          className={`flex-1 justify-self-center pb-3 mt-8 md:block md:pb-0 md:mt-0 ${
+            state ? "block" : "hidden"
+          }`}
+        >
+          <ul className="justify-end items-center space-y-8 md:flex md:space-x-6 md:space-y-0">
+            {menus.map((item, idx) => (
+              <li key={idx} className="text-slate-900 hover:text-slate-600">
+                <Link to={item.path}>{item.title}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-    </>
+    </nav>
   );
 }
