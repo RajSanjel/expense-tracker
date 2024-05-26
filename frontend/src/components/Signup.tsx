@@ -18,12 +18,14 @@ export function Signup() {
         .string()
         .min(8, { message: "Password must be atleast 8 character" }),
 
-      cpassword: z.string().min(8, { message: "Please confirm your password" }),
+      confirmPassword: z
+        .string()
+        .min(8, { message: "Please confirm your password" }),
       dispName: z.string().min(3, { message: "Name too short" }),
     })
-    .refine((data) => data.password === data.cpassword, {
+    .refine((data) => data.password === data.confirmPassword, {
       message: "Password doesn't Match",
-      path: ["cpassword"],
+      path: ["confirmPassword"],
     });
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -39,16 +41,15 @@ export function Signup() {
       confirmPassword,
       dispName,
     };
-    console.log(newUser);
-    console.log(signUpSchema.safeParse(newUser).success);
-    if (signUpSchema.safeParse(newUser).success) {
-      console.log("form is okay!");
-    } else {
-      console.log("Something is missing!");
-      console.log(signUpSchema.parse(newUser))
+    const validated = signUpSchema.safeParse(newUser);
+    if (validated.success) {
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      setDispName("");
+      setUsername("");
     }
   };
-
   const inputFields = [
     {
       id: "name",
@@ -115,7 +116,9 @@ export function Signup() {
               />
             </label>
           ))}
-          <Button onClick={handleRegister}>Signup</Button>
+          <Button type="submit" onClick={handleRegister}>
+            Signup
+          </Button>
         </CardContent>
       </Card>
     </div>
