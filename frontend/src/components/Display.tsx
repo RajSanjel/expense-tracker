@@ -35,7 +35,7 @@ export function Display() {
                 <TableCell
                   className={`font-semibold text-right ${
                     item.income - item.expense > 0
-                      ? "text-green-600"
+                      ? "text-green-700"
                       : "text-red-600"
                   }`}
                 >

@@ -18,7 +18,7 @@ export function Report() {
             <h1 className="font-bold text-lg mb-2">Today's report</h1>
             <p className="display-data">
               Todays Income{" "}
-              <span className=" text-green-600">
+              <span className=" text-green-700">
                 {" "}
                 $
                 {isTodayPresent(data)
@@ -43,7 +43,7 @@ export function Report() {
                   dateSorterDescending(data)[0].income <
                     dateSorterDescending(data)[0].expense
                     ? "text-red-600"
-                    : "text-green-600"
+                    : "text-green-700"
                 }`}
               >
                 $
@@ -66,7 +66,7 @@ export function Report() {
             <h1 className="font-bold text-lg mb-2">Weekly report</h1>
             <p className="display-data">
               Weekly Income{" "}
-              <span className=" text-green-600">
+              <span className=" text-green-700">
                 ${calculateTotalIncome(weeklyData)}
               </span>
             </p>
@@ -82,8 +82,8 @@ export function Report() {
                 className={`${
                   calculateTotalIncome(weeklyData) >
                   calculateTotalExpense(weeklyData)
-                    ? "text-green-600"
-                    : "text-red-600"
+                    ? "text-green-700"
+                    : "text-red-700"
                 }`}
               >
                 $
@@ -102,7 +102,7 @@ export function Report() {
             <h1 className="font-bold text-lg mb-2">All Time report</h1>
             <p className="display-data">
               Net Income{" "}
-              <span className=" text-green-600">
+              <span className=" text-green-700">
                 ${calculateTotalIncome(data)}
               </span>
             </p>
@@ -117,7 +117,7 @@ export function Report() {
               <span
                 className={`${
                   calculateTotalIncome(data) > calculateTotalExpense(data)
-                    ? "text-green-600"
+                    ? "text-green-700"
                     : "text-red-600"
                 }`}
               >

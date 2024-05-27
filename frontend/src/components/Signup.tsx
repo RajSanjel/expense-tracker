@@ -3,13 +3,17 @@ import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
 import { z } from "zod";
+import axios from "axios";
+import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
+import { AlertCircle, Terminal } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function Signup() {
   const signUpSchema = z
     .object({
       email: z
         .string()
-        .min(1, { message: "Email must be filled" })
+        .min(1, { message: "Please enter your email" })
         .email("Invalid email"),
       username: z
         .string()
@@ -17,37 +21,82 @@ export function Signup() {
       password: z
         .string()
         .min(8, { message: "Password must be atleast 8 character" }),
-
       confirmPassword: z
         .string()
         .min(8, { message: "Please confirm your password" }),
-      dispName: z.string().min(3, { message: "Name too short" }),
+      displayName: z.string().min(3, { message: "Name too short" }),
     })
     .refine((data) => data.password === data.confirmPassword, {
-      message: "Password doesn't Match",
+      message: "Password doesn't match",
       path: ["confirmPassword"],
     });
+
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [dispName, setDispName] = useState("");
+  const [displayName, setdisplayName] = useState("");
+  const [registerSuccess, setRegisterSuccess] = useState(false);
+  const [regError, setRegError] = useState(false);
+  const [regErrorMsg, setRegErrorMsg] = useState("");
+  const [errors, setErrors] = useState({
+    email: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+    displayName: "",
+  });
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     const newUser = {
       email,
       username,
       password,
       confirmPassword,
-      dispName,
+      displayName,
     };
     const validated = signUpSchema.safeParse(newUser);
+    setErrors(errors);
     if (validated.success) {
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-      setDispName("");
-      setUsername("");
+      setErrors({
+        email: "",
+        username: "",
+        password: "",
+        confirmPassword: "",
+        displayName: "",
+      });
+      await axios
+        .post("http://localhost:5000/api/auth/register", {
+          email,
+          username,
+          password,
+          displayName,
+        })
+        .then((res) => {
+          if (res.status == 201) {
+            setRegError(false);
+            setRegisterSuccess(true);
+            setEmail("");
+            setPassword("");
+            setConfirmPassword("");
+            setdisplayName("");
+            setUsername("");
+          }
+        })
+        .catch((error) => {
+          setRegError(true);
+          setRegisterSuccess(false);
+          setRegErrorMsg(error.response.data.msg);
+        });
+    } else {
+      const formatted = validated.error.format();
+      setErrors({
+        email: formatted.email?._errors[0] || "",
+        password: formatted.password?._errors[0] || "",
+        confirmPassword: formatted.confirmPassword?._errors[0] || "",
+        displayName: formatted.displayName?._errors[0] || "",
+        username: formatted.username?._errors[0] || "",
+      });
     }
   };
   const inputFields = [
@@ -56,9 +105,10 @@ export function Signup() {
       title: "Name",
       type: "text",
       placeholder: "Your Name",
-      value: dispName,
+      value: displayName,
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        setDispName(e.target.value),
+        setdisplayName(e.target.value),
+      error: errors.displayName,
     },
     {
       id: "email",
@@ -68,6 +118,7 @@ export function Signup() {
       value: email,
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         setEmail(e.target.value),
+      error: errors.email,
     },
     {
       id: "username",
@@ -77,6 +128,7 @@ export function Signup() {
       value: username,
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         setUsername(e.target.value),
+      error: errors.username,
     },
     {
       id: "password",
@@ -86,6 +138,7 @@ export function Signup() {
       value: password,
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         setPassword(e.target.value),
+      error: errors.password,
     },
     {
       id: "confirmPassword",
@@ -95,10 +148,27 @@ export function Signup() {
       value: confirmPassword,
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         setConfirmPassword(e.target.value),
+      error: errors.confirmPassword,
     },
   ];
   return (
     <div className="pb-8 w-96">
+      {registerSuccess && (
+        <Alert className="bg-white shadow-sm mb-4">
+          <Terminal className="h-4 w-4" />
+          <AlertTitle>Registration successful</AlertTitle>
+          <AlertDescription>
+            You may now proceed to <Link to="/login" className="underline">Login</Link>
+          </AlertDescription>
+        </Alert>
+      )}
+      {regError && (
+        <Alert variant="destructive" className="bg-white shadow-sm mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{regErrorMsg}</AlertDescription>
+        </Alert>
+      )}
       <Card>
         <CardHeader>
           <CardTitle>Signup</CardTitle>
@@ -106,7 +176,10 @@ export function Signup() {
         <CardContent className="grid gap-4">
           {inputFields.map((item) => (
             <label htmlFor={item.id} key={item.id}>
-              <p className="mb-1">{item.title}</p>
+              <p className="mb-1">
+                {item.title}
+                <span className="text-xs text-red-600"> {item.error}</span>
+              </p>
               <Input
                 type={item.type}
                 placeholder={item.placeholder}

@@ -14,8 +14,21 @@ const privateKey = fs.readFileSync("private.pem");
 // const publicKey = fs.readFileSync("public.pem");
 
 // Utility function to generate JWT using RSA key pair
-const generateToken = (userId: string) => {
-  const payload = { user: { id: userId } };
+
+const generateToken = (user: {
+  userid: string;
+  email: string;
+  displayName: string;
+  username: string;
+}) => {
+  const payload = {
+    user: {
+      id: user.userid,
+      email: user.email,
+      displayName: user.displayName,
+      username: user.username,
+    },
+  };
   return new Promise<string>((resolve, reject) => {
     jwt.sign(
       payload,
@@ -34,19 +47,16 @@ router.post("/register", async (req, res) => {
   const { email, username, password, displayName } = req.body;
 
   try {
-    
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
       return res.status(400).json({ msg: "User already exists" });
     }
 
     const user = new User({ email, username, password, displayName });
-
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
     await user.save();
-    const token = await generateToken(user.id);
-    return res.status(201).json({ token });
+    return res.status(201).json({ message: "Registered" });
   } catch (err) {
     console.error((err as Error).message);
     return res.status(500).send("Server Error");
@@ -55,22 +65,18 @@ router.post("/register", async (req, res) => {
 
 // Login Route
 router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ username });
-
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
-
     const isMatch = await bcrypt.compare(password, user.password);
-
     if (!isMatch) {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
-
-    const token = await generateToken(user.id);
+    const token = await generateToken(user);
     return res.json({ token });
   } catch (err) {
     console.error((err as Error).message);
