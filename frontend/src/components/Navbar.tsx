@@ -1,15 +1,22 @@
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import withAuth from "../HOC/withAuth";
 
-export function Navbar() {
+function Navbar({ isAuth }: { isAuth: boolean }) {
   const [state, setState] = useState(false);
-
+  console.log(isAuth);
   const menus = [
     { title: "Dashboard", path: "/" },
-    { title: "Login", path: "/login" },
-    { title: "Signup", path: "/signup" },
+    ...(isAuth
+      ? [] // If authenticated, no additional menu items
+      : [
+          // If not authenticated, add login and signup menu items
+          { title: "Login", path: "/login" },
+          { title: "Signup", path: "/signup" },
+        ]),
   ];
+  console.log(menus);
   return (
     <nav className="bg-white w-full border-b md:border-0 shadow-md mb-8">
       <div className="items-center px-4 max-w-screen-xl mx-auto md:flex md:px-8">
@@ -45,3 +52,5 @@ export function Navbar() {
     </nav>
   );
 }
+
+export default withAuth(Navbar);

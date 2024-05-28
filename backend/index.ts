@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import config from "./config";
 import authRoutes from "./routes/auth";
-
+import getDataRoutes from "./routes/getData";
 const app = express();
 
 app.use(express.json());
@@ -15,6 +15,7 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use("/api/auth", authRoutes);
+app.use("/api/get", getDataRoutes);
 
 const PORT = process.env.PORT || 5000;
 

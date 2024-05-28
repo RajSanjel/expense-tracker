@@ -1,11 +1,12 @@
 import { Routes, Route } from "react-router-dom/dist";
 import { AddExpInc } from "./components/AddExpInc";
 import { Chart } from "./components/Chart";
-import { Navbar } from "./components/Navbar";
+import Navbar from "./components/Navbar"; // Correct default import
 import { DataTable } from "./components/DataTable";
 import { Report } from "./components/Report";
-import { Login } from "./components/Login";
-import { Signup } from "./components/Signup";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
+
 
 function App() {
   return (

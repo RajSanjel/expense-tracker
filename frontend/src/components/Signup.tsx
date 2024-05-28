@@ -6,9 +6,13 @@ import { z } from "zod";
 import axios from "axios";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { AlertCircle, Terminal } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import withAuth from "@/HOC/withAuth";
 
-export function Signup() {
+function Signup({ isAuth }: { isAuth: boolean }) {
+  if (isAuth) {
+    return <Navigate to="/" />;
+  }
   const signUpSchema = z
     .object({
       email: z
@@ -158,7 +162,10 @@ export function Signup() {
           <Terminal className="h-4 w-4" />
           <AlertTitle>Registration successful</AlertTitle>
           <AlertDescription>
-            You may now proceed to <Link to="/login" className="underline">Login</Link>
+            You may now proceed to{" "}
+            <Link to="/login" className="underline">
+              Login
+            </Link>
           </AlertDescription>
         </Alert>
       )}
@@ -197,3 +204,5 @@ export function Signup() {
     </div>
   );
 }
+
+export default withAuth(Signup);

@@ -26,6 +26,6 @@
       ]
     }
   },
-  "include": ["src", "../postcss.config.js"],
+  "include": ["src", "../postcss.config.js", "src/HOC/withAuth.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

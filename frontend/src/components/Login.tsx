@@ -6,7 +6,13 @@ import { z } from "zod";
 import axios from "axios";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
-export function Login() {
+import { Navigate } from "react-router-dom";
+import withAuth from "@/HOC/withAuth";
+
+function Login({ isAuth }: { isAuth: boolean }) {
+  if (isAuth) {
+    return <Navigate to="/" />;
+  }
   const loginSchema = z.object({
     email: z
       .string()
@@ -45,12 +51,13 @@ export function Login() {
         .then((res) => {
           console.log(res);
           if (res.statusText == "OK") {
-            localStorage.setItem("token",res.data.token)
+            localStorage.setItem("token", res.data.token);
             console.log(res);
           }
           setEmail("");
           setPassword("");
           setLoginError(false);
+          window.location.reload();
         })
         .catch((err) => {
           setLoginError(true);
@@ -125,3 +132,5 @@ export function Login() {
     </div>
   );
 }
+
+export default withAuth(Login);
