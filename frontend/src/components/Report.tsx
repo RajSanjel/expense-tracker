@@ -12,7 +12,7 @@ export function Report() {
   const weeklyData = getWeeklyData(dateSorterDescending(data));
   return (
     <>
-      <div className="bg-white container py-8 px-8 rounded-md border-slate-200 border-2 shadow-md w-64 md:w-96"> 
+      <div className="bg-white container py-8 px-8 rounded-md border-slate-200 border-2 shadow-md w-80 md:w-96">
         <div className="grid gap-3">
           <div className="text-md">
             <h1 className="font-bold text-lg mb-2">Today's report</h1>
@@ -38,23 +38,22 @@ export function Report() {
             <p className="display-data">
               Net{" "}
               <span
-                className={`${
-                  isTodayPresent(data) &&
-                  dateSorterDescending(data)[0].income <
+                className={`${isTodayPresent(data) &&
+                    dateSorterDescending(data)[0].income <
                     dateSorterDescending(data)[0].expense
                     ? "text-red-600"
                     : "text-green-700"
-                }`}
+                  }`}
               >
                 $
                 {isTodayPresent(data)
                   ? dateSorterDescending(data)[0].income -
-                      dateSorterDescending(data)[0].expense <
+                    dateSorterDescending(data)[0].expense <
                     0
                     ? dateSorterDescending(data)[0].expense -
-                      dateSorterDescending(data)[0].income
+                    dateSorterDescending(data)[0].income
                     : dateSorterDescending(data)[0].income -
-                      dateSorterDescending(data)[0].expense
+                    dateSorterDescending(data)[0].expense
                   : "-"}
               </span>
             </p>
@@ -79,21 +78,20 @@ export function Report() {
             <p className="display-data">
               Net{" "}
               <span
-                className={`${
-                  calculateTotalIncome(weeklyData) >
-                  calculateTotalExpense(weeklyData)
+                className={`${calculateTotalIncome(weeklyData) >
+                    calculateTotalExpense(weeklyData)
                     ? "text-green-700"
                     : "text-red-700"
-                }`}
+                  }`}
               >
                 $
                 {calculateTotalIncome(weeklyData) -
                   calculateTotalExpense(weeklyData) <
-                0
+                  0
                   ? calculateTotalExpense(weeklyData) -
-                    calculateTotalIncome(weeklyData)
+                  calculateTotalIncome(weeklyData)
                   : calculateTotalIncome(weeklyData) -
-                    calculateTotalExpense(weeklyData)}
+                  calculateTotalExpense(weeklyData)}
               </span>
             </p>
           </div>
@@ -115,11 +113,10 @@ export function Report() {
             <p className="display-data">
               Net{" "}
               <span
-                className={`${
-                  calculateTotalIncome(data) > calculateTotalExpense(data)
+                className={`${calculateTotalIncome(data) > calculateTotalExpense(data)
                     ? "text-green-700"
                     : "text-red-600"
-                }`}
+                  }`}
               >
                 ${calculateTotalIncome(data) - calculateTotalExpense(data)}
               </span>

@@ -9,6 +9,7 @@ import { AlertCircle, Terminal } from "lucide-react";
 import { Link, Navigate } from "react-router-dom";
 import withAuth from "@/HOC/withAuth";
 
+
 function Signup({ isAuth }: { isAuth: boolean }) {
   if (isAuth) {
     return <Navigate to="/" />;

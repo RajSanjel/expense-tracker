@@ -26,16 +26,10 @@ export function AddExpInc() {
     if (submitSchema.safeParse(submitData).success) {
       axios.post("../api/dbData.json", submitData);
     }
-    // if (!title || !date || incExp === null) {
-    //   return;
-    // } else {
-    //
-    // }
   };
-
   return (
     <>
-      <Card className="shadow-md content-center md:w-96 lg:w-96">
+      <Card className="shadow-md content-center w-80 md:w-96 lg:w-96">
         <CardHeader>
           <p className="text-xl font-bold align-center text-center">
             Add Expense or Income

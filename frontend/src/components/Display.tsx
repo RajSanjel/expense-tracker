@@ -16,7 +16,6 @@ export function Display() {
   return (
     <>
       <div className="w-full bg-white p-8 border-slate-200 border-2 rounded-lg shadow-xl">
-        <span className="font-bold text-lg m-4">Your expenses and incomes</span>
         <Table>
           <TableHeader>
             <TableRow>

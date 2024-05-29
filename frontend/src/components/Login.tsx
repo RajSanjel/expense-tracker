@@ -9,7 +9,11 @@ import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { Navigate } from "react-router-dom";
 import withAuth from "@/HOC/withAuth";
 
-function Login({ isAuth }: { isAuth: boolean }) {
+interface AuthProps {
+  isAuth: boolean;
+}
+
+function Login({ isAuth }: AuthProps) {
   if (isAuth) {
     return <Navigate to="/" />;
   }

@@ -35,7 +35,6 @@ type DataProps = {
 };
 
 const data: DataProps[] = dispData;
-console.log(data.length);
 export const columns: ColumnDef<DataProps>[] = [
   {
     accessorKey: "date",
@@ -143,9 +142,9 @@ export function DataTable() {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}
