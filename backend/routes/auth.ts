@@ -17,16 +17,10 @@ const privateKey = fs.readFileSync("private.pem");
 
 const generateToken = (user: {
   userid: string;
-  email: string;
-  displayName: string;
-  username: string;
 }) => {
   const payload = {
     user: {
-      id: user.userid,
-      email: user.email,
-      displayName: user.displayName,
-      username: user.username,
+      id: user.userid
     },
   };
   return new Promise<string>((resolve, reject) => {
@@ -66,7 +60,7 @@ router.post("/register", async (req, res) => {
 // Login Route
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-
+  console.log("here")
   try {
     const user = await User.findOne({ email });
     if (!user) {

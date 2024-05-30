@@ -9,7 +9,6 @@ export function AddExpInc() {
   const [incExp, setIncExp] = useState<number>(0);
   const [date, setDate] = useState("");
   const submitSchema = z.object({
-    id: z.number(),
     title: z.string().min(1),
     expense: z.number(),
     income: z.number(),
@@ -17,14 +16,23 @@ export function AddExpInc() {
   });
   const handleSubmit = () => {
     const submitData = {
-      id: 10,
       title: title,
       expense: incExp < 0 ? incExp : 0,
       income: incExp > 0 ? incExp : 0,
       date: date,
     };
     if (submitSchema.safeParse(submitData).success) {
-      axios.post("../api/dbData.json", submitData);
+      axios.post("http://localhost:5000/api/post/incExp", {
+        date: submitData.date,
+        expense: submitData.expense,
+        income: submitData.income,
+        title: submitData.title,
+      }, {
+        headers: {
+          Authorization: localStorage.getItem("token")
+        }
+      })
+      console.log(submitData);
     }
   };
   return (
