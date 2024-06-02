@@ -26,7 +26,7 @@ export function AddExpInc() {
 
       if (submitSchema.safeParse(submitData).success) {
         try {
-          axios.post("http://localhost:5000/api/post/incExp",
+          axios.post("https://expense-tracker-23mvzppmj-rajs-projects-28718511.vercel.app/api/post/incExp",
             {
               date: submitData.date,
               expense: submitData.expense,

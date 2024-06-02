@@ -48,7 +48,7 @@ function Login({ isAuth }: AuthProps) {
         password: "",
       });
       await axios
-        .post("http://localhost:5000/api/auth/login", {
+        .post("https://expense-tracker-23mvzppmj-rajs-projects-28718511.vercel.app/api/auth/login", {
           email: email,
           password: password,
         })

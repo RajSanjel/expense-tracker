@@ -34,7 +34,7 @@ export function useDb() {
 }
 
 const fetchIncExpData = async () => {
-  const response = await axios.get("http://localhost:5000/api/get/dash", {
+  const response = await axios.get("https://expense-tracker-23mvzppmj-rajs-projects-28718511.vercel.app/api/get/dash", {
     headers: {
       Authorization: localStorage.getItem("token") || ""
     }

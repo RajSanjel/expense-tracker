@@ -71,7 +71,7 @@ function Signup({ isAuth }: { isAuth: boolean }) {
         displayName: "",
       });
       await axios
-        .post("http://localhost:5000/api/auth/register", {
+        .post("https://expense-tracker-23mvzppmj-rajs-projects-28718511.vercel.app/api/auth/register", {
           email,
           username,
           password,
