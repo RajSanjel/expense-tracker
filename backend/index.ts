@@ -10,11 +10,15 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-  origin: "https://expense-tracker-frontend-gules-rho.vercel.app",
+  origin: "https://expense-tracker-frontend-gules-rho.vercel.app", // Replace with your frontend URL
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: ["X-CSRF-Token", "X-Requested-With", "Accept", "Accept-Version", "Content-Length", "Content-MD5", "Content-Type", "Date", "X-Api-Version"],
   credentials: true
 }));
+
+app.options('*', cors());
+
+
 mongoose
   .connect(config.mongoURI)
   .then(() => console.log("DB connected"))
