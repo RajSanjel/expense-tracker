@@ -1,3 +1,4 @@
+import config from "@/config";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 
@@ -32,7 +33,7 @@ function withAuth<P extends AuthProps>(Component: React.ComponentType<P>) {
       if (token) {
         const fetchData = async () => {
           try {
-            const response = await axios.get("https://expense-tracker-23mvzppmj-rajs-projects-28718511.vercel.app/api/get/user", {
+            const response = await axios.get(`${config.API_BASE_URL}/api/get/user`, {
               headers: {
                 Authorization: token,
               },

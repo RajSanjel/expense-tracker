@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader } from "./ui/card";
 import { Input } from "./ui/input";
 import axios from "axios";
 import { z } from "zod";
+import config from "@/config";
 
 export function AddExpInc() {
   const [title, setTitle] = useState("");
@@ -26,7 +27,7 @@ export function AddExpInc() {
 
       if (submitSchema.safeParse(submitData).success) {
         try {
-          axios.post("https://expense-tracker-23mvzppmj-rajs-projects-28718511.vercel.app/api/post/incExp",
+          axios.post(`${config.API_BASE_URL}/api/post/incExp`,
             {
               date: submitData.date,
               expense: submitData.expense,

@@ -1,3 +1,4 @@
+import config from "@/config";
 import axios from "axios";
 import {
   createContext,
@@ -34,7 +35,7 @@ export function useDb() {
 }
 
 const fetchIncExpData = async () => {
-  const response = await axios.get("https://expense-tracker-23mvzppmj-rajs-projects-28718511.vercel.app/api/get/dash", {
+  const response = await axios.get(`${config.API_BASE_URL}/api/get/dash`, {
     headers: {
       Authorization: localStorage.getItem("token") || ""
     }

@@ -8,6 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { AlertCircle, Terminal } from "lucide-react";
 import { Link, Navigate } from "react-router-dom";
 import withAuth from "@/HOC/withAuth";
+import config from "@/config";
 
 
 function Signup({ isAuth }: { isAuth: boolean }) {
@@ -71,7 +72,7 @@ function Signup({ isAuth }: { isAuth: boolean }) {
         displayName: "",
       });
       await axios
-        .post("https://expense-tracker-23mvzppmj-rajs-projects-28718511.vercel.app/api/auth/register", {
+        .post(`${config.API_BASE_URL}/api/auth/register`, {
           email,
           username,
           password,

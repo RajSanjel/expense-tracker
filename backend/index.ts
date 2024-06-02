@@ -8,11 +8,13 @@ import postDataRoutes from "./routes/postData";
 const app = express();
 
 app.use(express.json());
-app.use(cors({
-  origin: ["https://expense-tracker-frontend-gules-rho.vercel.app/"],
-  methods: ["POST", "GET"]
-}));
 
+app.use(cors({
+  origin: "https://expense-tracker-frontend-gules-rho.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["X-CSRF-Token", "X-Requested-With", "Accept", "Accept-Version", "Content-Length", "Content-MD5", "Content-Type", "Date", "X-Api-Version"],
+  credentials: true
+}));
 mongoose
   .connect(config.mongoURI)
   .then(() => console.log("DB connected"))

@@ -8,6 +8,7 @@ import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { Navigate } from "react-router-dom";
 import withAuth from "@/HOC/withAuth";
+import config from "@/config";
 
 interface AuthProps {
   isAuth: boolean;
@@ -48,7 +49,7 @@ function Login({ isAuth }: AuthProps) {
         password: "",
       });
       await axios
-        .post("https://expense-tracker-23mvzppmj-rajs-projects-28718511.vercel.app/api/auth/login", {
+        .post(`${config.API_BASE_URL}/api/auth/login`, {
           email: email,
           password: password,
         })
