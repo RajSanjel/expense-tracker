@@ -20,9 +20,10 @@ interface AuthProps {
 function Navbar({ isAuth, userData }: AuthProps) {
   const [state, setState] = useState(false);
   const menus = [
-    { title: "Dashboard", path: "/" },
     ...(isAuth
-      ? []
+      ? [
+        { title: "Dashboard", path: "/Dashboard" },
+      ]
       : [
         { title: "Login", path: "/login" },
         { title: "Signup", path: "/signup" },

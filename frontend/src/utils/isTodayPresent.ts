@@ -1,17 +1,22 @@
 import { dateSorterDescending } from "@/utils/dateSorter";
 
 type DataProps = {
-  id: number;
   income: number;
   expense: number;
   date: string;
 }[];
 
 export function isTodayPresent(data: DataProps) {
-  const date = new Date();
-  const year = date.getFullYear();
-  const month =
-    date.getMonth() < 9 ? "0" + date.getMonth() + 1 : date.getMonth() + 1;
-  const day = date.getDate() < 9 ? "0" + date.getDate() : date.getDate();
-  return dateSorterDescending(data)[0].date == `${year}-${month}-${day}`;
+  if (data.length > 0) {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const today = `${year}-${month}-${day}`;
+    return dateSorterDescending(data)[0].date === today;
+  } else {
+    return []
+  }
+
 }
+

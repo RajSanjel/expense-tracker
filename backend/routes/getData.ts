@@ -69,7 +69,8 @@ router.get("/dash", verifyToken, async (req, res) => {
       id: data.txnId,
       income: data.income,
       expense: data.expense,
-      title: data.title
+      title: data.title,
+      date: data.date
     }));
     return res.status(200).json(returnData)
   } catch (err) {

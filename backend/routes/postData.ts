@@ -21,7 +21,7 @@ router.post("/incExp", verifyToken, async (req, res) => {
   try {
     const decoded = jwt.verify(token, publicKey) as Decoded;
     const { id } = decoded.user
-    const toSaveData = new IncExp({ userid: id, date, expense, income, title })
+    const toSaveData = new IncExp({ userid: id, date, expense: Math.abs(expense), income, title })
     await toSaveData.save()
     return res.status(201).json({ message: "Saved" });
   } catch (err) {

@@ -4,9 +4,10 @@ import { Card, CardContent, CardHeader } from "./ui/card";
 import { Input } from "./ui/input";
 import axios from "axios";
 import { z } from "zod";
+
 export function AddExpInc() {
   const [title, setTitle] = useState("");
-  const [incExp, setIncExp] = useState<number>(0);
+  const [incExp, setIncExp] = useState<string>("");
   const [date, setDate] = useState("");
   const submitSchema = z.object({
     title: z.string().min(1),
@@ -15,26 +16,45 @@ export function AddExpInc() {
     date: z.string().min(1),
   });
   const handleSubmit = () => {
-    const submitData = {
-      title: title,
-      expense: incExp < 0 ? incExp : 0,
-      income: incExp > 0 ? incExp : 0,
-      date: date,
-    };
-    if (submitSchema.safeParse(submitData).success) {
-      axios.post("http://localhost:5000/api/post/incExp", {
-        date: submitData.date,
-        expense: submitData.expense,
-        income: submitData.income,
-        title: submitData.title,
-      }, {
-        headers: {
-          Authorization: localStorage.getItem("token")
+    if (incExp !== undefined) {
+      const submitData = {
+        title: title,
+        expense: Number(incExp) < 0 ? Number(incExp) : 0,
+        income: Number(incExp) > 0 ? Number(incExp) : 0,
+        date: date,
+      };
+
+      if (submitSchema.safeParse(submitData).success) {
+        try {
+          axios.post("http://localhost:5000/api/post/incExp",
+            {
+              date: submitData.date,
+              expense: submitData.expense,
+              income: submitData.income,
+              title: submitData.title,
+            },
+            {
+              headers: {
+                Authorization: localStorage.getItem("token")
+              }
+            }
+          )
+            .then(res => {
+              console.log(res)
+              setIncExp("");
+              setTitle("");
+              setDate("");
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        } catch (err) {
+          console.log(err);
         }
-      })
-      console.log(submitData);
+      }
     }
   };
+
   return (
     <>
       <Card className="shadow-md content-center w-80 md:w-96 lg:w-96">
@@ -60,10 +80,9 @@ export function AddExpInc() {
               type="number"
               id="expInc"
               className="mt-1"
-              onChange={(e) => setIncExp(Number(e.target.value))}
+              onChange={(e) => setIncExp(e.target.value)}
               value={incExp}
             />
-
             <span className="text-xs text-red-600">
               Note: -ve for expense & +ve for income
             </span>

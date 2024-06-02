@@ -1,5 +1,4 @@
 type DataProps = {
-  id: number;
   income: number;
   expense: number;
   date: string;
