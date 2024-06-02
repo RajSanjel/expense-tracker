@@ -1,9 +1,9 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import verifyToken from "../middleware/authMiddleware";
-import fs from "fs";
 import Users from "../models/User";
 import IncExpData from "../models/IncExpData";
+import config from "../config";
 const router = express.Router();
 
 type Decoded = {
@@ -18,7 +18,7 @@ type IncExpData = {
   expense: number,
   title: string
 }
-const publicKey = fs.readFileSync("public.pem");
+const publicKey = config.publicKey
 
 router.get("/user", verifyToken, async (req, res) => {
   const { authorization } = req.headers;

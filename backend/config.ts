@@ -3,5 +3,6 @@ dotenv.config();
 
 export default {
   mongoURI: process.env.MONGODB_URI || "",
-  jwtSecret: process.env.JWT_SECRET || "",
+  publicKey: process.env.PUBLIC_KEY || "",
+  privateKey: process.env.PRIVATE_KEY || "",
 };

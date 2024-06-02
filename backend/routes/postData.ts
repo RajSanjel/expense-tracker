@@ -1,8 +1,8 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import verifyToken from "../middleware/authMiddleware";
-import fs from "fs";
 import IncExp from "../models/IncExpData";
+import config from "../config";
 const router = express.Router();
 
 type Decoded = {
@@ -14,7 +14,7 @@ type Decoded = {
 router.post("/incExp", verifyToken, async (req, res) => {
   const token = req.headers.authorization;
   const { date, income, expense, title } = req.body
-  const publicKey = fs.readFileSync("public.pem");
+  const publicKey = config.publicKey
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" })
   }

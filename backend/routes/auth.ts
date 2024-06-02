@@ -2,18 +2,10 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
-import fs from "fs";
-// import config from "../config";
+import config from "../config";
 
 const router = express.Router();
-
-// Read RSA private key from file
-const privateKey = fs.readFileSync("private.pem");
-
-// Read RSA public key from file
-// const publicKey = fs.readFileSync("public.pem");
-
-// Utility function to generate JWT using RSA key pair
+const privateKey = config.privateKey
 
 const generateToken = (user: {
   userid: string;
