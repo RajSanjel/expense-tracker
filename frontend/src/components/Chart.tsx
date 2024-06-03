@@ -2,34 +2,47 @@ import { LineChart } from "@mui/x-charts/LineChart";
 import { dateSorterAscending, dateSorterDescending } from "@/utils/dateSorter";
 import { getWeeklyData } from "@/utils/getWeeklyData";
 import { useDb } from "@/context/DbContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import processAndGroupData from "@/utils/formatDbData";
-
-const incomeData: number[] = [];
-const expenseData: number[] = [];
-const amountData: number[] = [];
-const xLabels: string[] = [];
 
 export function Chart() {
   const db = useDb();
   const data = db.incExpData;
-  const sortedData = processAndGroupData(dateSorterAscending(
-    getWeeklyData(dateSorterDescending(data))
-  ));
-  console.log(sortedData)
+
+  const [incomeData, setIncomeData] = useState<number[]>([]);
+  const [expenseData, setExpenseData] = useState<number[]>([]);
+  const [amountData, setAmountData] = useState<number[]>([]);
+  const [xLabels, setXLabels] = useState<string[]>([]);
+
   useEffect(() => {
-    sortedData.forEach((item) => {
-      incomeData.push(item.income);
-      expenseData.push(item.expense);
-      amountData.push(item.income - item.expense);
-      xLabels.push(item.date);
-    });
-  }, [sortedData])
+    if (data && data.length > 0) {
+      const sortedData = processAndGroupData(dateSorterAscending(
+        getWeeklyData(dateSorterDescending(data))
+      ));
+      const income: number[] = [];
+      const expense: number[] = [];
+      const amount: number[] = [];
+      const labels: string[] = [];
+
+      sortedData.forEach((item) => {
+        income.push(item.income);
+        expense.push(item.expense);
+        amount.push(item.income - item.expense);
+        labels.push(item.date);
+      });
+
+      setIncomeData(income);
+      setExpenseData(expense);
+      setAmountData(amount);
+      setXLabels(labels);
+    }
+  }, [data]);
+
   return (
     <>
-      {data.length > 0 &&
+      {data && data.length > 0 &&
         <div className="hidden bg-white rounded-md border-2 border-slate-200 shadow-md md:block content-center container p-6">
-          <h1 className="font-bold text-xl"> Weekly Statistics</h1>
+          <h1 className="font-bold text-xl">Weekly Statistics</h1>
           <LineChart
             width={600}
             height={350}
@@ -44,5 +57,4 @@ export function Chart() {
       }
     </>
   );
-
 }

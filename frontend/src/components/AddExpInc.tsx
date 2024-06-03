@@ -41,7 +41,6 @@ export function AddExpInc() {
             }
           )
             .then(res => {
-              console.log(res)
               setIncExp("");
               setTitle("");
               setDate("");
