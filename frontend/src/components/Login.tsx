@@ -54,11 +54,7 @@ function Login({ isAuth }: AuthProps) {
           password: password,
         })
         .then((res) => {
-          console.log(res);
-          if (res.statusText == "OK") {
-            localStorage.setItem("token", res.data.token);
-            console.log(res);
-          }
+          localStorage.setItem("token", res.data.token);
           setEmail("");
           setPassword("");
           setLoginError(false);
