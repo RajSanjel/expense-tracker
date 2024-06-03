@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/table";
 import { useDb } from "@/context/DbContext";
 import processAndGroupData from "@/utils/formatDbData";
-
+import { useMemo } from "react";
 
 type DataProps = {
   income: number;
@@ -60,27 +60,25 @@ export const columns: ColumnDef<DataProps>[] = [
     cell: ({ row }) => {
       const expense: number = row.getValue("expense");
       const income: number = row.getValue("income");
-      if (income > expense) {
-        const formatted = new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "USD",
-        }).format(income - expense);
-        return <div className="text-green-600">{formatted}</div>;
-      } else {
-        const formatted = new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "USD",
-        }).format(expense - income);
-        return <div className="text-red-600">{formatted}</div>;
-      }
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(Math.abs(income - expense));
+      return (
+        <div className={income > expense ? "text-green-600" : "text-red-600"}>
+          {formatted}
+        </div>
+      );
     },
-  }
+  },
 ];
+
 export function DataTable() {
-  const data = processAndGroupData(useDb().incExpData)
+  const { incExpData } = useDb();
+  const data = useMemo(() => processAndGroupData(incExpData), [incExpData]);
 
   const table = useReactTable({
-    data: data,
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -93,7 +91,7 @@ export function DataTable() {
 
   return (
     <>
-      {data.length > 0 &&
+      {data.length > 0 && (
         <div className="rounded-md border bg-white p-6 shadow-md grid grid-flow-row w-full">
           <Table>
             <TableHeader>
@@ -115,7 +113,7 @@ export function DataTable() {
               ))}
             </TableHeader>
             <TableBody>
-              {data.length > 0 && table.getRowModel().rows?.length ? (
+              {table.getRowModel().rows.length ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow key={row.id}>
                     {row.getVisibleCells().map((cell) => (
@@ -140,7 +138,7 @@ export function DataTable() {
               )}
             </TableBody>
           </Table>
-          {data.length > 5 && (
+          {table.getPageCount() > 1 && (
             <div className="space-x-2 px-4 grid grid-flow-col justify-end">
               <Button
                 variant="outline"
@@ -161,7 +159,7 @@ export function DataTable() {
             </div>
           )}
         </div>
-      }
+      )}
     </>
   );
 }

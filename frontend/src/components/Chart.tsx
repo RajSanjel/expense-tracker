@@ -2,23 +2,29 @@ import { LineChart } from "@mui/x-charts/LineChart";
 import { dateSorterAscending, dateSorterDescending } from "@/utils/dateSorter";
 import { getWeeklyData } from "@/utils/getWeeklyData";
 import { useDb } from "@/context/DbContext";
+import { useEffect } from "react";
+import processAndGroupData from "@/utils/formatDbData";
 
 const incomeData: number[] = [];
 const expenseData: number[] = [];
 const amountData: number[] = [];
 const xLabels: string[] = [];
 
-function Chart() {
+export function Chart() {
   const db = useDb();
   const data = db.incExpData;
-  const sortedData = dateSorterAscending(
+  const sortedData = processAndGroupData(dateSorterAscending(
     getWeeklyData(dateSorterDescending(data))
-  );
-  sortedData.forEach((item) => incomeData.push(item?.income));
-  sortedData.forEach((item) => expenseData.push(item?.expense));
-  sortedData.forEach((item) => amountData.push(item?.income - item?.expense));
-  sortedData.forEach((item) => xLabels.push(item.date));
-
+  ));
+  console.log(sortedData)
+  useEffect(() => {
+    sortedData.forEach((item) => {
+      incomeData.push(item.income);
+      expenseData.push(item.expense);
+      amountData.push(item.income - item.expense);
+      xLabels.push(item.date);
+    });
+  }, [sortedData])
   return (
     <>
       {data.length > 0 &&
@@ -40,4 +46,3 @@ function Chart() {
   );
 
 }
-export default Chart

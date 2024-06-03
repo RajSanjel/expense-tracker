@@ -1,5 +1,5 @@
 import { AddExpInc } from "@/components/AddExpInc";
-import Chart from "@/components/Chart";
+import { Chart } from "@/components/Chart";
 import { DataTable } from "@/components/DataTable";
 import Report from "@/components/Report";
 import { DbProvider } from "@/context/DbContext";

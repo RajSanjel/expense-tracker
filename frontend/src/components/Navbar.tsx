@@ -22,7 +22,7 @@ function Navbar({ isAuth, userData }: AuthProps) {
   const menus = [
     ...(isAuth
       ? [
-        { title: "Dashboard", path: "/Dashboard" },
+        { title: "Dashboard", path: "/dashboard" },
       ]
       : [
         { title: "Login", path: "/login" },
