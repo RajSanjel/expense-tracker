@@ -1,4 +1,4 @@
 const config = {
-    "API_BASE_URL": "https://backend-five-ruddy.vercel.app"
+    "API_BASE_URL": "https://expense-tracker-xylt.vercel.app/"
 }
 export default config;
