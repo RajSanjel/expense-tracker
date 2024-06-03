@@ -7,7 +7,15 @@ import getDataRoutes from "./routes/getData";
 import postDataRoutes from "./routes/postData";
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: 'https://expense-tracker-zeta-ivory.vercel.app',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type'],
+  optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 mongoose
   .connect(config.mongoURI)
