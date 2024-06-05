@@ -40,7 +40,11 @@ export function AddExpInc() {
               }
             }
           )
+<<<<<<< HEAD
             .then(() => {              
+=======
+            .then(() => {
+>>>>>>> f841c1170f7e331d22a9436184ddabf9186f1c05
               setIncExp("");
               setTitle("");
               setDate("");
