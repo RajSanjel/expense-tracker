@@ -39,16 +39,11 @@ export function AddExpInc() {
                 Authorization: localStorage.getItem("token")
               }
             }
-          )
-<<<<<<< HEAD
-            .then(() => {              
-=======
-            .then(() => {
->>>>>>> f841c1170f7e331d22a9436184ddabf9186f1c05
-              setIncExp("");
-              setTitle("");
-              setDate("");
-            })
+          ).then(() => {
+            setIncExp("");
+            setTitle("");
+            setDate("");
+          })
             .catch(err => {
               console.log(err);
             });
