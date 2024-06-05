@@ -40,7 +40,7 @@ export function AddExpInc() {
               }
             }
           )
-            .then(res => {
+            .then(() => {              
               setIncExp("");
               setTitle("");
               setDate("");

@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import { Home } from "./pages/Home";
 import withAuth from "./HOC/withAuth";
 import { NotFound } from "./components/NotFound";
+import { ActivityPage } from "./pages/ActivityPage";
 
 
 const AuthDashboard = withAuth(Dashboard)
@@ -22,6 +23,7 @@ function App({ isAuth }: { isAuth: boolean }) {
           }
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/activity" element={<ActivityPage />} />
           <Route path="/*" element={<NotFound />} />
         </Routes>
       </div>

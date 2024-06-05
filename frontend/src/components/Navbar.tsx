@@ -23,6 +23,7 @@ function Navbar({ isAuth, userData }: AuthProps) {
     ...(isAuth
       ? [
         { title: "Dashboard", path: "/dashboard" },
+        { title: "Activity", path: "/activity" },
       ]
       : [
         { title: "Login", path: "/login" },

@@ -13,9 +13,11 @@ type DbProviderProps = {
 };
 
 type incExpDataProps = {
+  id: string
   date: string;
   income: number;
   expense: number;
+  title: string
 };
 
 type userDataContext = {
