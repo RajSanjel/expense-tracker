@@ -35,7 +35,7 @@ export function useDb() {
 }
 
 const fetchIncExpData = async () => {
-  const response = await axios.get(`${config.API_BASE_URL}/api/get/dash`, {
+  const response = await axios.get(`${config.API_BASE_URL}/api/expense/get`, {
     headers: {
       Authorization: localStorage.getItem("token") || ""
     }

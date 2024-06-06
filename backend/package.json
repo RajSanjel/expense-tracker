@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "dev": "npx ts-node-dev index.ts",
     "start": "npx ts-node-dev index.ts",
     "build": "tsc"
   },
@@ -10,6 +11,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "6.6",
     "mongoose": "^8.4.0"

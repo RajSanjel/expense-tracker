@@ -27,7 +27,7 @@ export function AddExpInc() {
 
       if (submitSchema.safeParse(submitData).success) {
         try {
-          axios.post(`${config.API_BASE_URL}/api/post/incExp`,
+          axios.post(`${config.API_BASE_URL}/api/expense/add`,
             {
               date: submitData.date,
               expense: submitData.expense,

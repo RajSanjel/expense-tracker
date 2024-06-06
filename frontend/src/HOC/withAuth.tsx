@@ -33,7 +33,7 @@ function withAuth<P extends AuthProps>(Component: React.ComponentType<P>) {
       if (token) {
         const fetchData = async () => {
           try {
-            const response = await axios.get(`${config.API_BASE_URL}/api/get/user`, {
+            const response = await axios.get(`${config.API_BASE_URL}/api/auth/user`, {
               headers: {
                 Authorization: token,
               },

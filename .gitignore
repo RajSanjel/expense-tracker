@@ -131,3 +131,6 @@ dist
 private.pem
 public.pem
 .vercel
+private.key
+public.key
+package-lock.*
