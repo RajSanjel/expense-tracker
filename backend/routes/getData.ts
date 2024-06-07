@@ -66,6 +66,7 @@ router.get("/dash", verifyToken, async (req, res) => {
       return res.json({ message: "No Data Found" });
     }
     const returnData = incExpData.map(data => ({
+      uid: data.userid,
       id: data.txnId,
       income: data.income,
       expense: data.expense,

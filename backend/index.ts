@@ -5,6 +5,8 @@ import config from "./config";
 import authRoutes from "./routes/auth";
 import getDataRoutes from "./routes/getData";
 import postDataRoutes from "./routes/postData";
+import editData from "./routes/editData";
+import deleteData from "./routes/deleteData";
 
 const app = express();
 
@@ -41,9 +43,15 @@ mongoose
 app.get("/", (req: Request, res: Response) => {
   res.json("Deployed!");
 });
+
+
+
 app.use("/api/auth", authRoutes);
 app.use("/api/get", getDataRoutes);
 app.use("/api/post", postDataRoutes);
+app.use("/api/edit", editData)
+app.use("/api/delete", deleteData)
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
