@@ -13,7 +13,8 @@ type DbProviderProps = {
 };
 
 type incExpDataProps = {
-  id: string
+  uid: string,
+  id: string,
   date: string;
   income: number;
   expense: number;

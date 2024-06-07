@@ -1,15 +1,24 @@
 import { useDb } from "@/context/DbContext";
-import { Button } from "./ui/button"
+import axios from "axios";
+import config from "@/config";
+
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
+import { Card, CardContent, CardHeader } from "./ui/card";
+import { Input } from "./ui/input";
+import { useState } from "react";
+import { z } from "zod";
 
 type InfoCardProps = {
     id: string,
+    uid: string,
     income: number,
     expense: number,
-    title: string
+    title: string,
+    date: string
 }
 
 export default function Activity() {
-    const datas = useDb().incExpData
+    let datas = useDb().incExpData
     return (
         <div className="container grid gap-4 grid-cols-1 md:grid-cols-2 lg:md:grid-cols-3 pb-10">
             {datas.map(data =>
@@ -19,13 +28,8 @@ export default function Activity() {
     )
 }
 
-function InfoCard({ id, income, expense, title }: InfoCardProps) {
-    function handleDelete(id: string) {
-        console.log(id)
-    }
-    function handleEdit(id: string) {
-        console.log(id)
-    }
+function InfoCard({ uid, id, income, expense, title, date }: InfoCardProps) {
+
     return (
         <>
             <div className="bg-white shadow-md rounded-md p-6 grid">
@@ -45,10 +49,163 @@ function InfoCard({ id, income, expense, title }: InfoCardProps) {
                     </p>
                 }
                 <div className="grid gap-2 grid-flow-col m-4">
-                    <Button variant={"outline"} onClick={() => handleEdit(id)}>Edit</Button>
-                    <Button className="bg-red-600 hover:bg-red-400" onClick={() => handleDelete(id)}>Delete</Button>
+                    <Edit id={id} income={income} expense={expense} title={title} date={date} uid={uid} />
+                    <Delete id={id} uid={uid} />
                 </div>
             </div>
         </>
+    )
+}
+
+function Edit({ id, expense, income, title, date, uid }: InfoCardProps) {
+    const submitSchema = z.object({
+        uid: z.string(),
+        id: z.string(),
+        title: z.string().min(1),
+        expense: z.number(),
+        income: z.number(),
+        date: z.string().min(1),
+    });
+    const [newTitle, setTitle] = useState(title)
+    const [newExpense, setExpense] = useState(-expense)
+    const [newIncome, setIncome] = useState(income);
+    const [newDate, setDate] = useState(date)
+    const handleEdit = () => {
+        const submitData = {
+            uid: uid,
+            id: id,
+            title: newTitle,
+            expense: newExpense,
+            income: newIncome,
+            date: newDate,
+        };
+        if (!submitSchema.safeParse(submitData).success) {
+            return alert("Something went wrong");
+        }
+        try {
+            axios.post(`${config.API_BASE_URL}/api/edit/editIncExp`,
+                {
+                    uid: submitData.uid,
+                    id: submitData.id,
+                    date: submitData.date,
+                    expense: submitData.expense,
+                    income: submitData.income,
+                    title: submitData.title,
+                },
+                {
+                    headers: {
+                        Authorization: localStorage.getItem("token")
+                    }
+                }
+            ).catch(err => {
+                console.log(err);
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    return (
+        <AlertDialog>
+            <AlertDialogTrigger>
+                <div className="w-full text-white bg-gray-900 hover:bg-gray-700 p-2 rounded-lg">
+                    Edit
+                </div>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogDescription>
+                    <Card className="shadow-md content-center w-full">
+                        <CardHeader>
+                            <p className="text-xl font-bold align-center text-center">
+                                Edit
+                            </p>
+                        </CardHeader>
+                        <CardContent className="grid gap-3">
+                            <label htmlFor="title" className="text-lg">
+                                <span className="mb-2">Title</span>
+                                <Input
+                                    type="text"
+                                    id="title"
+                                    className="mt-1"
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    value={newTitle}
+                                />
+                            </label>
+                            <label htmlFor="expInc">
+                                <span>Expense/Income</span>
+                                {income > expense ?
+                                    <Input
+                                        type="number"
+                                        id="expInc"
+                                        className="mt-1"
+                                        onChange={(e) => setIncome(Number(e.target.value))}
+                                        value={newIncome}
+                                    /> :
+                                    <Input
+                                        type="number"
+                                        id="expInc"
+                                        className="mt-1"
+                                        onChange={(e) => setExpense(Number(e.target.value))}
+                                        value={newExpense}
+                                    />
+                                }
+                                <span className="text-xs text-red-600">
+                                    Note: -ve for expense & +ve for income
+                                </span>
+                            </label>
+                            <label htmlFor="date">
+                                <span className="mb-2">Expense/Income</span>
+                                <Input
+                                    type="date"
+                                    id="date"
+                                    className="mt-1"
+                                    onChange={(e) => setDate(e.target.value)}
+                                    value={newDate}
+                                />
+                            </label>
+                        </CardContent>
+                    </Card>
+                </AlertDialogDescription>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => handleEdit()} >Save</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+
+    )
+}
+
+function Delete({ id, uid }: { id: string, uid: string }) {
+
+    function handleDelete() {
+        axios.post(`${config.API_BASE_URL}/api/delete/delData`, { txnId: id, uid }, {
+            headers: {
+                Authorization: localStorage.getItem("token")
+            }
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+    return (<AlertDialog>
+        <AlertDialogTrigger className="bg-red-700 hover:bg-red-600 w-full text-white rounded-lg">
+            Delete
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+            <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure you want to delete?</AlertDialogTitle>
+                <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete your record
+                    and remove your data from our servers.
+                </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction className="bg-red-700 hover:bg-red-600" onClick={handleDelete}>
+                    Delete
+                </AlertDialogAction>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+    </AlertDialog>
     )
 }
