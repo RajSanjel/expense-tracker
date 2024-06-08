@@ -1,6 +1,4 @@
 import { useDb } from "@/context/DbContext";
-import axios from "axios";
-import config from "@/config";
 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
 import { Card, CardContent, CardHeader } from "./ui/card";
