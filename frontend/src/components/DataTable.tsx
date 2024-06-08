@@ -92,7 +92,7 @@ export function DataTable() {
   return (
     <>
       {data.length > 0 && (
-        <div className="rounded-md border bg-white p-6 shadow-md grid grid-flow-row w-full">
+        <div className="rounded-md border bg-white p-6 shadow-md grid grid-flow-row w-full lg:w-full md:w-4/5">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (

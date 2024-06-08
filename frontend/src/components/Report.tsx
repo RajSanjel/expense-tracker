@@ -29,6 +29,7 @@ function Report() {
     weeklyData = getWeeklyData(toFormatData)
   }
   const data: DataProps[] = processAndGroupData(toFormatData)
+  console.log(data[0].date)
   return (
     <>
       {!db.isLoading && db.incExpData.length > 0 &&

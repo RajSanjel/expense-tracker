@@ -13,10 +13,9 @@ export function isTodayPresent(data: DataProps) {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
     const today = `${year}-${month}-${day}`;
-    return dateSorterDescending(data)[0].date === today;
+    return dateSorterDescending(data)[0].date == today;
   } else {
     return []
   }
-
 }
 
