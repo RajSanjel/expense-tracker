@@ -13,18 +13,20 @@ type DbProviderProps = {
 };
 
 type incExpDataProps = {
-  uid: string,
-  id: string,
+  uid: string;
+  id: string;
   date: string;
   income: number;
   expense: number;
-  title: string
+  title: string;
 };
 
 type userDataContext = {
   incExpData: incExpDataProps[];
   isLoading: boolean;
   error: string | null;
+  deleteData: (id: string, uid: string) => void;
+  editData: (data: incExpDataProps) => void;
 };
 
 const DbContext = createContext({} as userDataContext);
@@ -50,7 +52,10 @@ export function DbProvider({ children }: DbProviderProps) {
   const [incExpData, setIncExpData] = useState<incExpDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
   const getData = async () => {
+    setIsLoading(true);
+    setError(null);
     try {
       const data = await fetchIncExpData();
       setIncExpData(data);
@@ -60,11 +65,42 @@ export function DbProvider({ children }: DbProviderProps) {
       setIsLoading(false);
     }
   };
+
+  const deleteData = async (id: string, uid: string) => {
+    try {
+      await axios.post(`${config.API_BASE_URL}/api/delete/delData`, { txnId: id, uid }, {
+        headers: {
+          Authorization: localStorage.getItem("token") || ""
+        }
+      });
+      await getData();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const editData = async (data: incExpDataProps) => {
+    try {
+      await axios.post(`${config.API_BASE_URL}/api/edit/editIncExp`,
+        data,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token") || ""
+          }
+        }
+      );
+      await getData();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     getData();
-  }, [])
+  }, []);
+
   return (
-    <DbContext.Provider value={{ incExpData, isLoading, error }}>
+    <DbContext.Provider value={{ incExpData, isLoading, error, deleteData, editData }}>
       {children}
     </DbContext.Provider>
   );

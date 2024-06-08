@@ -10,7 +10,7 @@ import { ActivityPage } from "./pages/ActivityPage";
 
 
 const AuthDashboard = withAuth(Dashboard)
-
+const AuthActivityPage = withAuth(ActivityPage)
 function App({ isAuth }: { isAuth: boolean }) {
   return (
     <>
@@ -23,7 +23,7 @@ function App({ isAuth }: { isAuth: boolean }) {
           }
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/activity" element={<ActivityPage />} />
+          <Route path="/activity" element={<AuthActivityPage />} />
           <Route path="/*" element={<NotFound />} />
         </Routes>
       </div>
