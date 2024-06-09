@@ -10,6 +10,7 @@ export function AddExpInc() {
   const [title, setTitle] = useState("");
   const [incExp, setIncExp] = useState<string>("");
   const [date, setDate] = useState("");
+  const [isSubmiting, setIsSubmiting] = useState(false)
   const submitSchema = z.object({
     title: z.string().min(1),
     expense: z.number(),
@@ -25,9 +26,24 @@ export function AddExpInc() {
         date: date,
       };
 
+      const isValidDate = (inputDate: string) => {
+        const currentDate = new Date();
+        const input = new Date(inputDate);
+        currentDate.setHours(0, 0, 0, 0);
+        input.setHours(0, 0, 0, 0);
+        return input.getTime() <= currentDate.getTime();
+      };
+
+      if (!isValidDate(submitData.date)) {
+        setIsSubmiting(false);
+        return;
+      }
+
       if (submitSchema.safeParse(submitData).success) {
+        setIsSubmiting(true);
         try {
-          axios.post(`${config.API_BASE_URL}/api/post/incExp`,
+          axios.post(
+            `${config.API_BASE_URL}/api/post/incExp`,
             {
               date: submitData.date,
               expense: submitData.expense,
@@ -36,21 +52,29 @@ export function AddExpInc() {
             },
             {
               headers: {
-                Authorization: localStorage.getItem("token")
+                Authorization: localStorage.getItem("token"),
               }
             }
-          ).then(() => {
-            setIncExp("");
-            setTitle("");
-            setDate("");
-          })
+          )
+            .then(() => {
+              setIncExp("");
+              setTitle("");
+              setDate("");
+              setIsSubmiting(false);
+            })
             .catch(err => {
               console.log(err);
+              setIsSubmiting(false);
             });
         } catch (err) {
           console.log(err);
+          setIsSubmiting(false);
         }
+      } else {
+        setIsSubmiting(false);
       }
+    } else {
+      setIsSubmiting(false);
     }
   };
 
@@ -96,8 +120,10 @@ export function AddExpInc() {
               value={date}
             />
           </label>
-          <Button className="font-lg font-semibold" onClick={handleSubmit}>
-            Add
+          <Button className="font-lg font-semibold" onClick={handleSubmit} disabled={isSubmiting}>
+            {
+              isSubmiting ? "Adding..." : "Add"
+            }
           </Button>
         </CardContent>
       </Card>

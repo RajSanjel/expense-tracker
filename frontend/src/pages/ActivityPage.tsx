@@ -3,7 +3,7 @@ import { DbProvider } from "@/context/DbContext";
 import { Link } from "react-router-dom";
 
 export function ActivityPage({ isAuth }: { isAuth: boolean }) {
-    document.title = "Activity - Earning Tracker";
+    document.title = "Activity - Expense Tracker";
     return (
         <>
             {isAuth ?

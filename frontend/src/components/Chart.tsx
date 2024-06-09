@@ -1,50 +1,22 @@
 import { LineChart } from "@mui/x-charts/LineChart";
-import { dateSorterAscending, dateSorterDescending } from "@/utils/dateSorter";
-import { getWeeklyData } from "@/utils/getWeeklyData";
+import getWeeklyData from "@/utils/getWeeklyData";
 import { useDb } from "@/context/DbContext";
-import { useEffect, useState } from "react";
-import processAndGroupData from "@/utils/formatDbData";
-import { getLast7Days } from "@/utils/getLast7Days";
 
 export function Chart() {
   const db = useDb();
   const data = db.incExpData;
-
-  const [incomeData, setIncomeData] = useState<number[]>([]);
-  const [expenseData, setExpenseData] = useState<number[]>([]);
-  const [amountData, setAmountData] = useState<number[]>([]);
-  const [xLabels, setXLabels] = useState<string[]>([]);
-
-  useEffect(() => {
-    const last7Days = getLast7Days();
-    setXLabels(last7Days);
-
-    const incomeMap: { [key: string]: number } = {};
-    const expenseMap: { [key: string]: number } = {};
-
-    if (data && data.length > 0) {
-      const sortedData = processAndGroupData(dateSorterAscending(
-        getWeeklyData(dateSorterDescending(data))
-      ));
-      sortedData.forEach((item) => {
-        incomeMap[item.date] = item.income;
-        expenseMap[item.date] = item.expense;
-      });
-
-      const income: number[] = last7Days.map(day => incomeMap[day] || 0);
-      const expense: number[] = last7Days.map(day => expenseMap[day] || 0);
-      const amount: number[] = last7Days.map(day => (incomeMap[day] || 0) - (expenseMap[day] || 0));
-
-      setIncomeData(income);
-      setExpenseData(expense);
-      setAmountData(amount);
-    } else {
-      setIncomeData(Array(7).fill(0));
-      setExpenseData(Array(7).fill(0));
-      setAmountData(Array(7).fill(0));
-    }
-  }, [data]);
-
+  const chartData = (getWeeklyData(data))
+  const incomeData: number[] = []
+  const expenseData: number[] = []
+  const amountData: number[] = []
+  const xLabels: string[] = []
+  chartData.forEach((data) => {
+    incomeData.push(data.income)
+    expenseData.push(data.expense)
+    xLabels.push(data.date)
+    amountData.push(data.income - data.expense)
+  }
+  )
   return (
     <>
       {data && data.length > 0 &&

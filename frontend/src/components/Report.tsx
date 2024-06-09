@@ -7,7 +7,7 @@ import {
 import { dateSorterDescending } from "@/utils/dateSorter";
 import { isTodayPresent } from "@/utils/isTodayPresent";
 import { useDb } from "@/context/DbContext";
-import { getWeeklyData } from "@/utils/getWeeklyData";
+import getWeeklyData from "@/utils/getWeeklyData";
 import processAndGroupData from '@/utils/formatDbData';
 
 
@@ -26,10 +26,10 @@ function Report() {
       Loading......
     </div>
   } else {
-    weeklyData = getWeeklyData(toFormatData)
+    weeklyData = getWeeklyData(toFormatData);
+
   }
   const data: DataProps[] = processAndGroupData(toFormatData)
-  console.log(data[0].date)
   return (
     <>
       {!db.isLoading && db.incExpData.length > 0 &&

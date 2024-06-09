@@ -6,7 +6,7 @@ import { DbProvider } from "@/context/DbContext";
 import { Link } from "react-router-dom";
 
 function Dashboard({ isAuth }: { isAuth: boolean }) {
-  document.title = "Dashboard - Earning Tracker";
+  document.title = "Dashboard - Expense Tracker";
   return (
     < >
       {isAuth ? <div className="grid grid-flow-row grid-rows-2 gap-6 xl:gap-5 xl:grid-flow-col justify-items-center  pb-8 md:auto-cols-auto w-3/4">
