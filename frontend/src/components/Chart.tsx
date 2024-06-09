@@ -26,7 +26,6 @@ export function Chart() {
       const sortedData = processAndGroupData(dateSorterAscending(
         getWeeklyData(dateSorterDescending(data))
       ));
-
       sortedData.forEach((item) => {
         incomeMap[item.date] = item.income;
         expenseMap[item.date] = item.expense;

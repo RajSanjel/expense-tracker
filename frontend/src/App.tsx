@@ -11,16 +11,14 @@ import { ActivityPage } from "./pages/ActivityPage";
 
 const AuthDashboard = withAuth(Dashboard)
 const AuthActivityPage = withAuth(ActivityPage)
-function App({ isAuth }: { isAuth: boolean }) {
+function App() {
   return (
     <>
       <Navbar />
       <div className="container grid justify-items-center">
         <Routes>
           <Route path="/" element={<Home />} />
-          {isAuth &&
-            <Route path="/dashboard" element={<AuthDashboard />} />
-          }
+          <Route path="/dashboard" element={<AuthDashboard />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/activity" element={<AuthActivityPage />} />
@@ -31,4 +29,4 @@ function App({ isAuth }: { isAuth: boolean }) {
   );
 }
 
-export default withAuth(App);
+export default App;

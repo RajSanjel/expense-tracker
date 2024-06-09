@@ -22,6 +22,7 @@ function Navbar({ isAuth, userData }: AuthProps) {
   const menus = [
     ...(isAuth
       ? [
+        { title: "Home", path: "/" },
         { title: "Dashboard", path: "/dashboard" },
         { title: "Activity", path: "/activity" },
       ]
@@ -42,7 +43,7 @@ function Navbar({ isAuth, userData }: AuthProps) {
         <div className="flex items-center justify-between py-3 md:py-5 md:block">
           <Link to="/">
             <h1 className="text-2xl font-bold text-slate-900">
-              Earning Tracker
+              Expense Tracker
             </h1>
           </Link>
           <div className="md:hidden">
