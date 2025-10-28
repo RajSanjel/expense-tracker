@@ -111,7 +111,7 @@ export function AddExpInc() {
             </span>
           </label>
           <label htmlFor="date">
-            <span className="mb-2">Expense/Income</span>
+            <span className="mb-2">Date</span>
             <Input
               type="date"
               id="date"
