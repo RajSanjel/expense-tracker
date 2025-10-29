@@ -19,7 +19,7 @@ const generateToken = (user: {
     jwt.sign(
       payload,
       privateKey, // Use private key for signing
-      { expiresIn: 30600, algorithm: "RS512" },
+      { expiresIn: 31_536_000, algorithm: "RS512" },
       (err, token) => {
         if (err) reject(err);
         resolve(token as string);
