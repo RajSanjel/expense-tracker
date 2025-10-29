@@ -1,8 +1,7 @@
 import config from "@/config";
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-// Define the UserData interface
 interface UserData {
   userid: string;
   username: string;
@@ -10,58 +9,83 @@ interface UserData {
   displayName: string;
 }
 
-// Define the AuthProps interface
-interface AuthProps {
+interface Injected {
   isAuth: boolean;
-  userData: UserData;
+  userData: UserData | null;
+  authReady: boolean;
 }
 
-// Define the withAuth higher-order component
-function withAuth<P extends AuthProps>(Component: React.ComponentType<P>) {
-  const AuthHOC = (props: Omit<P, keyof AuthProps>) => {
-    const [isAuth, setIsAuth] = useState<boolean>(false);
-    const [userData, setUserData] = useState<UserData>({
-      userid: "",
-      username: "",
-      email: "",
-      displayName: ""
-    });
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+interface Options {
+  requireAuth?: boolean;
+  showLoader?: boolean;
+  Fallback?: React.ComponentType;
+}
+
+export default function withAuth<P extends Injected>(
+  Component: React.ComponentType<P>,
+  { requireAuth = false, showLoader = true, Fallback }: Options = {}
+) {
+  return function AuthHOC(props: Omit<P, keyof Injected>) {
+    const [authReady, setAuthReady] = useState(false);
+    const [isAuth, setIsAuth] = useState(false);
+    const [userData, setUserData] = useState<UserData | null>(null);
 
     useEffect(() => {
       const token = localStorage.getItem("token");
-      if (token) {
-        const fetchData = async () => {
-          try {
-            const response = await axios.get(`${config.API_BASE_URL}/api/get/user`, {
-              headers: {
-                Authorization: token,
-              },
-            });
-            setIsAuth(true);
-            setUserData(response.data);
-          } catch (error) {
-            console.error("Error fetching user data:", error);
-            setIsAuth(false);
-            localStorage.removeItem("token");
-          } finally {
-            setIsLoading(false);
-          }
-        };
-        fetchData();
-      } else {
+      if (!token) {
         setIsAuth(false);
-        setIsLoading(false);
+        setAuthReady(true);
+        return;
       }
+
+      (async () => {
+        try {
+          const res = await axios.get(`${config.API_BASE_URL}/api/get/user`, {
+            headers: { Authorization: `${token}` },
+          });
+          setIsAuth(true);
+          setUserData(res.data);
+        } catch {
+          localStorage.removeItem("token");
+          setIsAuth(false);
+        } finally {
+          setAuthReady(true);
+        }
+      })();
     }, []);
 
-    if (isLoading) {
-      return <div>Loading...</div>;
+    // not ready yet
+    if (!authReady) {
+      if (!showLoader)
+        return (
+          <Component
+            {...(props as P)}
+            isAuth={false}
+            userData={null}
+            authReady={false}
+          />
+        );
+
+      if (requireAuth)
+        return (
+          <div className="flex items-center justify-center h-screen">
+            Loading…
+          </div>
+        );
     }
-    return <Component {...(props as P)} isAuth={isAuth} userData={userData} />;
+
+
+    if (requireAuth && !isAuth) {
+      return Fallback ? <Fallback /> : null;
+    }
+
+    return (
+      <Component
+        {...(props as P)}
+        isAuth={isAuth}
+        userData={userData}
+        authReady={authReady}
+      />
+    );
   };
-
-  return AuthHOC;
 }
-
-export default withAuth;

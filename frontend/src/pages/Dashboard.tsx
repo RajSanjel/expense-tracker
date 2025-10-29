@@ -3,8 +3,15 @@ import { Chart } from "@/components/Chart";
 import { DataTable } from "@/components/DataTable";
 import Report from "@/components/Report";
 import { DbProvider } from "@/context/DbContext";
+import withAuth from "@/HOC/withAuth";
 import { Link } from "react-router-dom";
-
+function MustBeLoggedIn() {
+  return (<p className="mb-4">You must be{" "}
+    <Link to="/login" className="underline">
+      logged in
+    </Link> to access the activity page.
+  </p>)
+}
 function Dashboard({ isAuth }: { isAuth: boolean }) {
   document.title = "Dashboard - Expense Tracker";
   return (
@@ -19,14 +26,10 @@ function Dashboard({ isAuth }: { isAuth: boolean }) {
           <DataTable />
         </DbProvider>
       </div> :
-        <p>You must be
-          <Link to="/login" className="underline">
-            logged in
-          </Link> to access the dashbord.
-        </p>
+        null
       }
     </>
   );
 };
 
-export default Dashboard;
+export default withAuth(Dashboard, { requireAuth: true, Fallback: MustBeLoggedIn });

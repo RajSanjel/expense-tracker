@@ -6,7 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import withAuth from "./HOC/withAuth";
 import { NotFound } from "./components/NotFound";
-import { ActivityPage } from "./pages/ActivityPage";
+import ActivityPage from "./pages/ActivityPage";
 
 
 const AuthDashboard = withAuth(Dashboard)

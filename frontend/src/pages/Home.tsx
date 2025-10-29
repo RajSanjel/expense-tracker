@@ -106,4 +106,4 @@ function FeatureCards({ title, body, img }: FeatureProps) {
     )
 }
 
-export default withAuth(Home)
+export default withAuth(Home, { showLoader: true, requireAuth: false })

@@ -20,6 +20,8 @@ export default function getWeeklyData(data: DataProps) {
 
   const dataMap: { [key: string]: { income: number; expense: number } } = {};
 
+  if ("message" in data) return [];
+
   data.forEach((item) => {
     if (dataMap[item.date]) {
       dataMap[item.date].income += item.income;

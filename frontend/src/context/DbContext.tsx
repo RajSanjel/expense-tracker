@@ -25,8 +25,9 @@ type userDataContext = {
   incExpData: incExpDataProps[];
   isLoading: boolean;
   error: string | null;
-  deleteData: (id: string, uid: string) => void;
-  editData: (data: incExpDataProps) => void;
+  deleteData: (id: string, uid: string) => Promise<void>;
+  editData: (data: incExpDataProps) => Promise<void>;
+  reload: () => Promise<void>;
 };
 
 const DbContext = createContext({} as userDataContext);
@@ -35,18 +36,17 @@ export function useDb() {
   const context = useContext(DbContext);
   if (context === undefined)
     throw new Error("useDb must be used within a DbProvider");
-
   return context;
 }
 
 const fetchIncExpData = async () => {
   const response = await axios.get(`${config.API_BASE_URL}/api/get/dash`, {
     headers: {
-      Authorization: localStorage.getItem("token") || ""
-    }
+      Authorization: localStorage.getItem("token") || "",
+    },
   });
-  return response.data;
-}
+  return response.data as incExpDataProps[];
+};
 
 export function DbProvider({ children }: DbProviderProps) {
   const [incExpData, setIncExpData] = useState<incExpDataProps[]>([]);
@@ -68,11 +68,15 @@ export function DbProvider({ children }: DbProviderProps) {
 
   const deleteData = async (id: string, uid: string) => {
     try {
-      await axios.post(`${config.API_BASE_URL}/api/delete/delData`, { txnId: id, uid }, {
-        headers: {
-          Authorization: localStorage.getItem("token") || ""
+      await axios.post(
+        `${config.API_BASE_URL}/api/delete/delData`,
+        { txnId: id, uid },
+        {
+          headers: {
+            Authorization: localStorage.getItem("token") || "",
+          },
         }
-      });
+      );
       await getData();
     } catch (err) {
       console.log(err);
@@ -81,14 +85,11 @@ export function DbProvider({ children }: DbProviderProps) {
 
   const editData = async (data: incExpDataProps) => {
     try {
-      await axios.post(`${config.API_BASE_URL}/api/edit/editIncExp`,
-        data,
-        {
-          headers: {
-            Authorization: localStorage.getItem("token") || ""
-          }
-        }
-      );
+      await axios.post(`${config.API_BASE_URL}/api/edit/editIncExp`, data, {
+        headers: {
+          Authorization: localStorage.getItem("token") || "",
+        },
+      });
       await getData();
     } catch (err) {
       console.log(err);
@@ -100,7 +101,16 @@ export function DbProvider({ children }: DbProviderProps) {
   }, []);
 
   return (
-    <DbContext.Provider value={{ incExpData, isLoading, error, deleteData, editData }}>
+    <DbContext.Provider
+      value={{
+        incExpData,
+        isLoading,
+        error,
+        deleteData,
+        editData,
+        reload: getData,
+      }}
+    >
       {children}
     </DbContext.Provider>
   );

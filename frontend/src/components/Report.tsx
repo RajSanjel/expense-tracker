@@ -10,6 +10,11 @@ import { useDb } from "@/context/DbContext";
 import getWeeklyData from "@/utils/getWeeklyData";
 import processAndGroupData from '@/utils/formatDbData';
 
+const PulseBlock = () => {
+  return (
+    <span className="block h-3 w-16 bg-gray-300 rounded mt-1 animate-pulse"></span>
+  )
+}
 
 type DataProps = {
   date: string,
@@ -22,12 +27,65 @@ function Report() {
   let weeklyData = [];
   const toFormatData = db.incExpData
   if (db.isLoading) {
-    return <div>
-      Loading......
-    </div>
+    return (
+      <div className="bg-white container py-8 px-8 rounded-md border-slate-200 border-2 shadow-md w-80 md:w-96">
+        <div className="grid gap-3">
+          <div className="text-md">
+            <h1 className="font-bold text-lg mb-2">Today's report</h1>
+            <p className="display-data">
+              Todays Income
+              <PulseBlock />
+            </p>
+            <p className="display-data">
+              Todays Expenses
+              <PulseBlock />
+            </p>
+            <p className="display-data">
+              Net
+              <PulseBlock />
+            </p>
+          </div>
+
+          <hr />
+
+          <div className="text-md">
+            <h1 className="font-bold text-lg mb-2">Weekly report</h1>
+            <p className="display-data">
+              Weekly Income
+              <PulseBlock />
+            </p>
+            <p className="display-data">
+              Weekly Expenses
+              <PulseBlock />
+            </p>
+            <p className="display-data">
+              Net
+              <PulseBlock />
+            </p>
+          </div>
+
+          <hr />
+
+          <div className="text-md">
+            <h1 className="font-bold text-lg mb-2">All Time report</h1>
+            <p className="display-data">
+              Net Income
+              <PulseBlock />
+            </p>
+            <p className="display-data">
+              Net Expenses
+              <PulseBlock />
+            </p>
+            <p className="display-data">
+              Net
+              <PulseBlock />
+            </p>
+          </div>
+        </div>
+      </div>
+    )
   } else {
     weeklyData = getWeeklyData(toFormatData);
-
   }
   const data: DataProps[] = processAndGroupData(toFormatData)
   return (

@@ -21,7 +21,8 @@ interface UserData {
 
 interface AuthProps {
   isAuth: boolean;
-  userData: UserData;
+  userData: UserData | null;
+  authReady: boolean;
 }
 
 function Navbar({ isAuth, userData }: AuthProps) {
@@ -91,9 +92,9 @@ function Navbar({ isAuth, userData }: AuthProps) {
                 <DropdownMenuContent>
                   <DropdownMenuLabel>My account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Name: {userData.displayName}</DropdownMenuItem>
-                  <DropdownMenuItem>Email: {userData.email}</DropdownMenuItem>
-                  <DropdownMenuItem>Username: {userData.username}</DropdownMenuItem>
+                  <DropdownMenuItem>Name: {userData?.displayName}</DropdownMenuItem>
+                  <DropdownMenuItem>Email: {userData?.email}</DropdownMenuItem>
+                  <DropdownMenuItem>Username: {userData?.username}</DropdownMenuItem>
                   <DropdownMenuItem>
                     <Button
                       variant="outline"
@@ -113,4 +114,4 @@ function Navbar({ isAuth, userData }: AuthProps) {
   );
 }
 
-export default withAuth(Navbar);
+export default withAuth(Navbar, { requireAuth: false, showLoader: false });

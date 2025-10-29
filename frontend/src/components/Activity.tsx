@@ -16,15 +16,41 @@ type InfoCardProps = {
     date: string;
     onUpdate: () => void;
 };
+function InfoCardSkeleton() {
+    return (
+        <div className="bg-white shadow-md rounded-md p-6 grid animate-pulse">
+            <div className="h-6 w-40 bg-gray-200 rounded mb-3" />
+
+            <div className="h-5 w-32 bg-gray-200 rounded mb-3" />
+
+            <div className="grid gap-2 grid-flow-col m-4">
+                <div className="h-9 w-20 bg-gray-200 rounded" />
+                <div className="h-9 w-20 bg-gray-200 rounded" />
+            </div>
+        </div>
+    );
+}
 
 function Activity() {
-    const { incExpData } = useDb();
+    const { incExpData, isLoading } = useDb();
+
+    if (isLoading) {
+        return (
+            <div className="container grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pb-10">
+                <InfoCardSkeleton />
+                <InfoCardSkeleton />
+                <InfoCardSkeleton />
+            </div>
+        );
+    }
 
     return (
-        <div className="container grid gap-4 grid-cols-1 md:grid-cols-2 lg:md:grid-cols-3 pb-10">
-            {incExpData.map(data => (
-                <InfoCard {...data} key={data.id} onUpdate={() => { }} />
-            ))}
+        <div className="container grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pb-10">
+            {incExpData.length !== 0
+                ? incExpData.map((data) => (
+                    <InfoCard {...data} key={data.id} onUpdate={() => { }} />
+                ))
+                : "No data yet. You can add your data in dashboard."}
         </div>
     );
 }
@@ -50,13 +76,13 @@ function InfoCard({ uid, id, income, expense, title, date, onUpdate }: InfoCardP
             )}
             <div className="grid gap-2 grid-flow-col m-4">
                 <Edit id={id} income={income} expense={expense} title={title} date={date} uid={uid} onUpdate={onUpdate} />
-                <Delete id={id} uid={uid} onUpdate={onUpdate} />
+                <Delete id={id} uid={uid} />
             </div>
         </div>
     );
 }
 
-function Edit({ id, expense, income, title, date, uid, onUpdate }: InfoCardProps) {
+function Edit({ id, expense, income, title, date, uid }: InfoCardProps) {
     const submitSchema = z.object({
         uid: z.string(),
         id: z.string(),
@@ -84,7 +110,7 @@ function Edit({ id, expense, income, title, date, uid, onUpdate }: InfoCardProps
             return alert("Something went wrong");
         }
         await db.editData(submitData);
-        onUpdate(); // Notify parent component to update
+        await db.reload();
     };
 
     return (
@@ -158,12 +184,12 @@ function Edit({ id, expense, income, title, date, uid, onUpdate }: InfoCardProps
     );
 }
 
-function Delete({ id, uid, onUpdate }: { id: string; uid: string; onUpdate: () => void; }) {
+function Delete({ id, uid }: { id: string; uid: string; }) {
     const db = useDb();
 
     const handleDelete = async () => {
         await db.deleteData(id, uid);
-        onUpdate(); // Notify parent component to update
+        await db.reload();
     };
 
     return (
